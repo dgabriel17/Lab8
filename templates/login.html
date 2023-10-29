@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/labEight.css') }}">
+</head>
+<body>
+
+    <h1> Schedule Login </h1>
+    <br>
+    <br>
+    <label for="user">What kind of user are you: </label>
+    <select name="user" id="user">
+        <option value="professor">Professor</option>
+        <option value="student">Student</option>
+    </select>
+    <br>
+    <br>
+    <h3>Username</h3>
+    <input id = "username" placeholder="Enter Username">
+    <br>
+    <br>
+    <h3>Password</h3>
+    <input id="password" placeholder="Enter Password">
+    <br>
+    <br>
+    <button id="loginEnter">Login</button>
+
+
+    <script src="{{ url_for('static', filename='/js/labEight.js') }}"></script>
+</body>
+</html>
