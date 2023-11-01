@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/labEight.css') }}">
+</head>
+<body>
+
+    <h1 id="header">{{ header_text }}</h1>
+
+    <button id="classes">View Classes</button>
+    <br>
+    <br>0
+    <center>
+    <div id="class_table"></div>
+    </center>
+    <br>
+    <br>
+    <button id="students">View Students</button>
+    <br>
+    <br>
+    <h3>Update Grades:</h3>
+    <input id="name_edit" style="width:150px;" placeholder="Enter: name">
+    <input id="grade_edit" style="width:150px;" placeholder="Enter: grade">
+    <button id="button_edit">Edit Grade</button>
+
+    <script src="{{ url_for('static', filename='/js/profView.js') }}"></script>
+</body>
+</html>
