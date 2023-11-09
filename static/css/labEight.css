@@ -80,3 +80,15 @@ th {
     text-align: center;
     padding: 10px;
 }
+
+.classBtn {
+    background-color: #63768D;
+    border-color: #fff;
+    border-radius: 10px;
+    font-family: 'Comic Sans MS';
+    font-size: 25px;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    height: 60px;
+}

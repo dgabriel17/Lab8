@@ -2,8 +2,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
     // Create vars for the buttons
-    const classesBtn = document.getElementById("classes");      // View classes button
-    const studentsBtn = document.getElementById("students");    // View students button
     const updateBtn = document.getElementById("button_edit");   // Update grade button
     const name_field = document.getElementById("name_edit");    // Name input
     const grade_field = document.getElementById("grade_edit");  // Grade input
@@ -12,8 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var myDict = {};
 
     // Add event listener for the button press for showing the classes a professor is teaching
-    classesBtn.addEventListener("click", function() {
-
+    window.onload = function () {
         // Do api call to get the data for the specific student
         const request = new XMLHttpRequest();
         let url = window.location.href;                         // Current URL value
@@ -50,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let col3 = document.createElement("th");        // Create third table header element
             let col4 = document.createElement("th");        // Create fourth table header element
 
+
             col1.textContent = "Course";                    // Text for first header
             col2.textContent = "Professor";                 // Text for second header
             col3.textContent = "Time";                      // Text for third header
@@ -63,12 +61,16 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add all the data to the table
             for (item in myDict) {
                 first = tab.insertRow(i+1);                // Create new row
-                col1 = document.createElement("td");        // Create new table data element
+                console.log(i);
+                col1 = document.createElement("button");        // Create new table data element
+                col1.classList.add('classBtn');
                 col2 = document.createElement("td");        // Create another table data element
                 col3 = document.createElement("td");        // Create another table data element
                 col4 = document.createElement("td");        // Create another table data element
 
                 col1.textContent = myDict[item].Course; // Write the student's name to the table element's value
+                // Set the id for the button
+                col1.setAttribute("id", col1.textContent);
                 col2.textContent = myDict[item].Professor;    // Write their grade to the table element's value
                 col3.textContent = myDict[item].Time;
                 col4.textContent = myDict[item].Capacity;
@@ -81,20 +83,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Add the final table to the html via and id
             document.getElementById("class_table").appendChild(tab);
-        }
 
+            // Add a click event listener to the document to handle button clicks
+            document.addEventListener("click", function (event) {
+                if (event.target.tagName === "BUTTON") {
+                    getStudents(event.target.id);
+                }
+            });
+        }
         // Rest the dictionary
         myDict = {};
-    });
+
+    };
 
     // Button for showing the students
-    studentsBtn.addEventListener("click", function() {
-
+     function getStudents(className) {
         // Do api call to get the data for the specific student
         const request = new XMLHttpRequest();
         let url = ""
-        url = window.location.href;                         // Current URL value
-        url = url + "/GET_STUDENTS";                                 // Update the url to match the route we want to take
+        url = window.location.href;                   // Current URL value
+        url = url + "/GET_STUDENTS/" + className;     // Update the url to match the route we want to take
         request.open("GET", url);
         request.send();
         request.onload = () => {
@@ -111,8 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log(value);
             }
 
-
-        // Print out the data from the json response
+            // Print out the data from the json response
             let i = 0;      // Looping var
 
             // Make the html element
@@ -157,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Rest the dictionary
         myDict = {};
-    });
+     }
 
     // Button for updating a grade
     updateBtn.addEventListener ("click", function() {
@@ -195,5 +202,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
 });
