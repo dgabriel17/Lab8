@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Add/Drop Class - {{studentName}}</h1>
+
+         <br>
+
+         <script src="/static/index.js"></script>
+
+         <!-- <button type="button" onclick="fetchAllClasses_Student()">See All My Classes</button><br> -->
+         <a href = "/addDrop"><button>Add/Drop</button></a>
+
+
+         <h3>Available Classes: </h3><br>
+         <table border = 1>
+            {% for row in classes %}
+        
+            <tr>
+               <th> {{ row.className }} </th>
+               <td> {{ row.prof }} </td>
+               <td> {{ row.timeInfo }} </td>
+               <td> {{ row.capacity }} </td>
+
+               {% set ns = namespace(found=false) %} 
+                    {%  for class in studentClasses %}
+                        {%  if row.className == class.className %}
+                        {% set ns.found = true %}
+                        {% endif %} 
+                    {% endfor %}
+
+                    {%  if ns.found %}
+                        <td><a href="/drop/{{ row.className }}">Drop</a></td>
+                    {% else %}
+                        <td><a href="/add/{{ row.className }}">Add</a></td>
+                    {% endif %}
+
+                
+
+            </tr>
+        
+            {% endfor %}
+         </table> <br>
+
+
+
+        <a href='/logout'><input type=”button” value=”Logout”></a>
+    </body>
+</html>
