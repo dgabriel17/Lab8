@@ -8,13 +8,17 @@
          <script src="/static/index.js"></script>
 
          <!-- <button type="button" onclick="fetchAllClasses_Student()">See All My Classes</button><br> -->
-         <a href='http://127.0.0.1:5000/addDrop'>
-            <button>Add/Drop Course</button>
-          </a>
+         <a href = "/addDrop"><button>Add/Drop a Course</button></a>
 
 
          <h3>My Classes: </h3><br>
          <table border = 1>
+
+            <tr>
+                <th>Course</th>
+                <th>Current Grade</th>
+            </tr>
+
             {% for row in rows %}
         
             <tr>
