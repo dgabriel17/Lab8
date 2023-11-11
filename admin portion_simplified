@@ -1,0 +1,122 @@
+from flask import Flask, request, render_template, jsonify, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+import os
+app = Flask(__name__)
+
+## uploaded like this until i can get the git to work
+db_path = os.path.join(os.getcwd(), 'instance', 'students.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+
+
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  
+
+
+import logging
+
+# Set the log level to debug
+logging.basicConfig(level=logging.DEBUG)
+
+db = SQLAlchemy(app)
+
+class Student(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    grade = db.Column(db.Float, nullable=False)
+
+    def __init__(self, name, grade):
+        self.name = name
+        self.grade = grade
+
+
+
+class teacher(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True, nullable=False)
+    grade = db.Column(db.Float, nullable=False)
+
+    def __init__(self, name, grade):
+        self.name = name
+        self.grade = grade
+
+
+
+###  ADMIN PORTION  ####
+
+# Create an Admin instance and link it to your app
+#style choice
+app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+admin = Admin(app, name="MR", template_mode='bootstrap3')
+#gives access to the diff dbs but needs a class to go with , ie students teacher ect.
+admin.add_view(ModelView(Student, db.session))
+admin.add_view(ModelView(teacher, db.session))
+
+
+
+
+@app.route('/')
+def index():
+    students = Student.query.all()
+    students_data = [{"name": student.name, "grade": student.grade} for student in students]
+    return render_template('index.html', students=students_data)
+
+@app.route('/get_grade', methods=['GET'])
+def get_student_grade():
+    student_name = request.args.get("student_name")
+    student = Student.query.filter_by(name=student_name).first()
+    if student:
+        return jsonify({"name": student.name, "grade": student.grade})
+    return jsonify({"message": "Student not found"}), 404
+
+@app.route('/add_student', methods=['POST'])
+def add_student():
+    data = request.form
+    name = data.get("name")
+    grade = float(data.get("grade"))
+    if not name or not grade:
+        return "Invalid data", 400
+    new_student = Student(name=name, grade=grade)
+    db.session.add(new_student)
+    db.session.commit()
+    return jsonify({"name": new_student.name, "grade": new_student.grade}), 201
+
+@app.route('/edit_student', methods=['POST'])
+def edit_student():
+    data = request.form
+    name = data.get("name")
+    new_grade = float(data.get("grade"))
+    student = Student.query.filter_by(name=name).first()
+    if student:
+        student.grade = new_grade
+        db.session.commit()
+        return jsonify({"name": student.name, "grade": student.grade})
+    return "Student not found", 404
+
+@app.route('/delete_student', methods=['POST'])
+def delete_student():
+    name = request.form.get("name")
+    student = Student.query.filter_by(name=name).first()
+    if student:
+        db.session.delete(student)
+        db.session.commit()
+        return "Student deleted successfully", 200
+    return "Student not found", 404
+
+###### ADMIN portion     ######
+@app.route('/admin')
+def admin_redirect():
+    return redirect(url_for('admin.index'))
+
+#add this portion to ur html
+
+#    <h1>Student Management</h1>
+#<a href="{{ url_for('admin_redirect') }}">Go to Admin</a>
+
+#
+
+if __name__ == '__main__':
+    with app.app_context():
+        
+        db.create_all()
+    app.run(host='0.0.0.0', debug=True)
