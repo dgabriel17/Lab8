@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<head>
+    <title>Instructor View</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/miniProj.css') }}">
+</head>
 <html>
     <body>
         <h1>Welcome {{content}} - Instructor</h1>
@@ -41,6 +45,6 @@
          </table> <br>
 
 
-        <a href='/logout'><input type=”button” value=”Logout”></a>
+        <a href='/logout'><input class="loginBtn" type=”button” value='Logout'></a>
     </body>
 </html>

@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<head>
+    <title>Your Students</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/miniProj.css') }}">
+</head>
 <html>
     <body>
         <h1>All Students in {{className}}</h1>
@@ -9,7 +13,7 @@
 
          <!-- <button type="button" onclick="fetchAllClasses_Student()">See All My Classes</button><br> -->
          <!-- <a href = "/addDrop"><button>Add/Drop a Course</button></a> -->
-         <a href = "/success/{{instructor}}"><button>Back to My Classes</button></a>
+         <a href = "/success/{{instructor}}"><button style="width:300px;">Back to My Classes</button></a>
 
 
          <h3>Students: </h3><br>
@@ -34,6 +38,6 @@
          </table> <br>
 
 
-        <a href='/logout'><input type=”button” value=”Logout”></a>
+        <a href='/logout'><input class="loginBtn" type=”button” value='Logout'></a>
     </body>
 </html>

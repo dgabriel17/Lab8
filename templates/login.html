@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<head>
+	<title>Login</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='/miniProj.css') }}">
+</head>
 <html>
     <body>
 		<h1> Login </h1>
@@ -7,18 +11,20 @@
 			<p><strong>Error:</strong> {{ error }}
 	 	{% endif %}
 
-		<form action = "http://localhost:5000/login" method = "POST">
+		<form action = "http://127.0.01:5000/login" method = "POST">
 			<p>Enter Username:</p>
-			<input type="text" 
+			<input placeholder="Enter Username"
+					type="text"
 			name="name" 
 			pattern="^[a-zA-Z0-9\s\S]*$" 
 			title="Must Only Contain A-z, 0-9">
 			<p>Enter Password:</p>
-			<input type="text"  
+			<input placeholder="Enter Password"
+					type="password"
 					name="password" 
 					pattern="^[a-zA-Z0-9@!?$.]*$" 
 					title='Must only contain Alphanumeric Characters'>
-			<p><input type = "submit" value = "Login" /></p>
+			<p><input class="loginBtn" type = "submit" value = "Login" /></p>
 		</form>
 
 		<a href="signUp"><button id="createAccount"> Create Account</button></a>

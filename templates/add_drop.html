@@ -1,18 +1,21 @@
 <!DOCTYPE html>
+<head>
+    <title>Add/Drop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/miniProj.css') }}">
+</head>
 <html>
     <body>
         <h1>Add/Drop Class - {{studentName}}</h1>
-
-         <br>
 
          <!-- <script src="/static/index.js"></script> -->
 
          <!-- <button type="button" onclick="fetchAllClasses_Student()">See All My Classes</button><br> -->
 
-         <a href = "/success/{{studentName}}"><button> Return </button></a>
+         <a href = "/success/{{studentName}}"><button> <- Return </button></a>
+        <br>
 
-
-         <h3>Add/Drop a Class: </h3><br>
+<!--         <h3>Add/Drop a Class: </h3>-->
+        <br>
 
          
         {% if error %}
@@ -61,6 +64,6 @@
 
 
 
-        <a href='/logout'><input type=”button” value=”Logout”></a>
+        <a href='/logout'><input class="loginBtn" type=”button” value='Logout'></a>
     </body>
 </html>
