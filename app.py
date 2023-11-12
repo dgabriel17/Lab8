@@ -4,7 +4,11 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func,  select, and_
 import json
 from flask_login import LoginManager, current_user, login_user, login_required, logout_user, UserMixin, login_manager
-from flask_bcrypt import Bcrypt 
+from flask_bcrypt import Bcrypt
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+import os
+import logging
 
 #Configure Flask app
 app = Flask(__name__)
@@ -12,7 +16,7 @@ bcrypt = Bcrypt(app)
 CORS(app)
 
 #Configure DB
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///example.sqlite" 
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///example.sqlite"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -20,6 +24,17 @@ login_manager.login_view = 'login'
 login_manager.session_protection = "strong"
 
 app.secret_key = 'keep it secret, keep it safe' # Add this to avoid an error
+
+# ---------------- ADMIN ------------------
+db_path = os.path.join(os.getcwd(), 'instance', 'example.sqlite')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+logging.basicConfig(level=logging.DEBUG)
+
+# db = SQLAlchemy(app)
+# -----------------------------------------
+
 
 #set db variable as a SQLAlchemy obj tied to flask app "app"
 db = SQLAlchemy(app) 
@@ -62,6 +77,17 @@ class Classes(UserMixin, db.Model):
     def __repr__(self):
         return '<Classes %r>' % self.className
 
+
+# ------------- ADMIN -----------
+
+app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+admin = Admin(app, name="MR", template_mode='bootstrap3')
+
+admin.add_view(ModelView(Gradebook, db.session))
+admin.add_view(ModelView(Classes, db.session))
+
+# -------------------------------
+
 #enables us to call current user
 @login_manager.user_loader
 def load_user(id):
@@ -72,6 +98,11 @@ def load_user(id):
 def renderIndex():
         #Display html file (**All html's go in templates -> CSS & JS go in static)
         return render_template("login.html")
+
+###### ADMIN portion     ######
+@app.route('/admin')
+def admin_redirect():
+    return redirect(url_for('admin.index'))
 
 #Route to open add/drop class page for a particular student 
 @app.route('/addDrop', methods=['GET', 'POST'])
@@ -310,7 +341,11 @@ def success(name):
                                         ).group_by(Gradebook.className)
             #Render instructorView template with arguments plugged in
             return render_template("instructorView.html", content = name, rows=taughtClasses, studentCounts = classStudentCounts)
-        
+
+        # Check if the user is the Admin
+        elif name == 'Admin':
+            return redirect(url_for('admin.index'))
+
         #Case where user is a student 
         else:
 
@@ -325,6 +360,7 @@ def success(name):
 
             #Render template for student view, plug in arguments for current user's name and the classes they are enrolled in
             return render_template("studentView.html", content = name, rows=x)
+
 
 
 
